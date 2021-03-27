@@ -1,3 +1,4 @@
+
 import React, { useContext, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { UserContext } from '../../App';
@@ -8,6 +9,8 @@ import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
 } from '@material-ui/pickers';
+import Bookings from '../Bookings/Bookings';
+
 
 const Book = () => {
     const { bedType } = useParams();
@@ -18,25 +21,34 @@ const Book = () => {
     });
 
     const handleCheckInDate = (date) => {
-        const newDates = {...selectedDate};
-        newDates.checkIn = Date;
+        const newDates = { ...selectedDate }
+        newDates.checkIn = date;
         setSelectedDate(newDates);
     };
 
     const handleCheckOutDate = (date) => {
-        const newDates = {...selectedDate};
-        newDates.checkOut = Date;
+        const newDates = { ...selectedDate }
+        newDates.checkOut = date;
         setSelectedDate(newDates);
-    }; 
+    };
 
     const handleBooking = () => {
-        
+        console.log("button clicked");
+        const newBooking = { ...loggedInUser, ...selectedDate };
+        fetch('http://localhost:5000/addBooking', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newBooking)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+        })
     }
-
 
     return (
         <div style={{ textAlign: 'center' }}>
-            <h1>hello, {loggedInUser.name}! Let's book a {bedType} Room.</h1>
+            <h1>Hello, {loggedInUser.name}! Let's book a {bedType} Room.</h1>
             <p>Want a <Link to="/home">different room?</Link> </p>
 
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -44,7 +56,7 @@ const Book = () => {
                     <KeyboardDatePicker
                         disableToolbar
                         variant="inline"
-                        format="MM/dd/yyyy"
+                        format="dd/MM/yyyy"
                         margin="normal"
                         id="date-picker-inline"
                         label="Check In Date"
@@ -58,19 +70,124 @@ const Book = () => {
                         margin="normal"
                         id="date-picker-dialog"
                         label="Check Out Date"
-                        format="MM/dd/yyyy"
+                        format="dd/MM/yyyy"
                         value={selectedDate.checkOut}
                         onChange={handleCheckOutDate}
                         KeyboardButtonProps={{
                             'aria-label': 'change date',
                         }}
                     />
-
                 </Grid>
-                <Button onClick={handleBooking} variant="contained" color="primary">  BOOk Now </Button>
+                <Button onClick={handleBooking} variant="contained" color="primary">Book Now</Button>
             </MuiPickersUtilsProvider>
+            <Bookings></Bookings>
         </div>
     );
 };
 
 export default Book;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useContext, useState } from 'react';
+// import { Link, useParams } from 'react-router-dom';
+// import { UserContext } from '../../App';
+// import Grid from '@material-ui/core/Grid';
+// import Button from '@material-ui/core/Button';
+// import DateFnsUtils from '@date-io/date-fns';
+// import {
+//     MuiPickersUtilsProvider,
+//     KeyboardDatePicker,
+// } from '@material-ui/pickers';
+
+// const Book = () => {
+//     const { bedType } = useParams();
+//     const [loggedInUser, setLoggedInUser] = useContext(UserContext);
+//     const [selectedDate, setSelectedDate] = useState({
+//         checkIn: new Date(),
+//         checkOut: new Date()
+//     });
+
+//     const handleCheckInDate = (date) => {
+//         const newDates = {...selectedDate};
+//         newDates.checkIn = Date;
+//         setSelectedDate(newDates);
+//     };
+
+//     const handleCheckOutDate = (date) => {
+//         const newDates = {...selectedDate};
+//         newDates.checkOut = Date;
+//         setSelectedDate(newDates);
+//     }; 
+
+//     const handleBooking = () => {
+//         console.log("button clicked");
+//         const newBooking = {...loggedInUser, ...selectedDate};
+//         fetch('http://localhost:5000/')
+//     }
+
+
+//     return (
+//         <div style={{ textAlign: 'center' }}>
+//             <h1>hello, {loggedInUser.name}! Let's book a {bedType} Room.</h1>
+//             <p>Want a <Link to="/home">different room?</Link> </p>
+
+//             <MuiPickersUtilsProvider utils={DateFnsUtils}>
+//                 <Grid container justify="space-around">
+//                     <KeyboardDatePicker
+//                         disableToolbar
+//                         variant="inline"
+//                         format="MM/dd/yyyy"
+//                         margin="normal"
+//                         id="date-picker-inline"
+//                         label="Check In Date"
+//                         value={selectedDate.checkIn}
+//                         onChange={handleCheckInDate}
+//                         KeyboardButtonProps={{
+//                             'aria-label': 'change date',
+//                         }}
+//                     />
+//                     <KeyboardDatePicker
+//                         margin="normal"
+//                         id="date-picker-dialog"
+//                         label="Check Out Date"
+//                         format="MM/dd/yyyy"
+//                         value={selectedDate.checkOut}
+//                         onChange={handleCheckOutDate}
+//                         KeyboardButtonProps={{
+//                             'aria-label': 'change date',
+//                         }}
+//                     />
+
+//                 </Grid>
+//                 <Button onClick={handleBooking} variant="contained" color="primary">  BOOk Now </Button>
+//             </MuiPickersUtilsProvider>
+//         </div>
+//     );
+// };
+
+// export default Book;
