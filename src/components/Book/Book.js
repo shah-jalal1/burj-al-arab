@@ -1,4 +1,3 @@
-
 import React, { useContext, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { UserContext } from '../../App';
@@ -11,7 +10,6 @@ import {
 } from '@material-ui/pickers';
 import Bookings from '../Bookings/Bookings';
 
-
 const Book = () => {
     const { bedType } = useParams();
     const [loggedInUser, setLoggedInUser] = useContext(UserContext);
@@ -21,20 +19,19 @@ const Book = () => {
     });
 
     const handleCheckInDate = (date) => {
-        const newDates = { ...selectedDate }
+        const newDates = {...selectedDate}
         newDates.checkIn = date;
         setSelectedDate(newDates);
     };
 
     const handleCheckOutDate = (date) => {
-        const newDates = { ...selectedDate }
+        const newDates = {...selectedDate}
         newDates.checkOut = date;
         setSelectedDate(newDates);
     };
 
-    const handleBooking = () => {
-        console.log("button clicked");
-        const newBooking = { ...loggedInUser, ...selectedDate };
+    const handleBooking = () =>{
+        const newBooking = {...loggedInUser, ...selectedDate};
         fetch('http://localhost:5000/addBooking', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
